@@ -1,9 +1,15 @@
-# Ignore everything in this working tree by default, then re-include the site.
+# Ignore everything in this working tree by default, then re-include the site
+# and the Pages deployment workflow.
 /*
 
 # Project webpage (deployed to GitHub Pages from the site/ directory).
 !/site/
 !/site/**
+
+# GitHub Actions workflow that publishes site/ to GitHub Pages.
+!/.github/
+!/.github/workflows/
+!/.github/workflows/**
 
 # Keep the ignore file itself.
 !/.gitignore
