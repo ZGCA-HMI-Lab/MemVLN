@@ -1,6 +1,9 @@
 # Ignore everything in this working tree by default, then re-include the
-# website (site/), the code package, and the Pages workflow.
+# website (site/), the released evaluation code, and the Pages workflow.
 /*
+!/.gitignore
+!/README.md
+!/CODE.md
 
 # Project webpage (deployed to GitHub Pages from the site/ directory).
 !/site/
@@ -11,16 +14,11 @@
 !/.github/workflows/
 !/.github/workflows/**
 
-# Keep the ignore file itself.
-!/.gitignore
-
 # ---------------------------------------------------------------------------
-# MemoryVLN code package (mirrored from the standard-data implementation).
+# MemoryVLN evaluation code package.
 # ---------------------------------------------------------------------------
 !/config/
 !/config/**
-!/create_data/
-!/create_data/**
 !/scripts/
 !/scripts/**
 !/src/
