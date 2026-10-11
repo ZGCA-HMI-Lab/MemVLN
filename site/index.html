@@ -803,36 +803,6 @@
       </div>
     </section>
 
-    <!-- Implementation -->
-    <section class="section" id="implementation">
-      <div class="container is-max-desktop">
-        <h2 class="title is-3 has-text-centered mem-section-title">Implementation</h2>
-        <p class="section-subtitle has-text-centered">MemoryVLN uses Qwen2.5-VL as the action-prediction backbone and keeps the VGGT geometry branch frozen.</p>
-        <div class="table-container mt-5" tabindex="0" role="region" aria-label="Implementation configuration">
-          <table class="table is-fullwidth is-hoverable comparison-table"><thead>
-            <tr><th scope="col">Component</th><th scope="col">Value</th><th scope="col">Role</th></tr>
-          </thead><tbody>
-            <tr><th scope="row">Action backbone</th><td>Qwen2.5-VL</td><td>Actor prediction is conditioned on language and memory-enhanced tokens.</td></tr>
-            <tr><th scope="row">Geometry backbone</th><td>frozen VGGT</td><td>Produces geometric tokens; no VGGT parameters are updated.</td></tr>
-            <tr><th scope="row">Training / evaluation seed</th><td>42</td><td>Seeds Python, NumPy, PyTorch CPU, and all CUDA devices.</td></tr>
-            <tr><th scope="row">Compute platform</th><td>64 &times; A100 80GB</td><td>Global batch size 64 (64 GPUs &times; per-device 1 &times; grad-accum 1).</td></tr>
-            <tr><th scope="row">Maximum rollout length</th><td>400</td><td>Stops an episode after at most 400 navigation actions.</td></tr>
-            <tr><th scope="row">Frame-sampling chunk size</th><td>8</td><td>Chunk size for two-level Ebbinghaus-style sampling.</td></tr>
-            <tr><th scope="row">Inner / outer sampling scale</th><td>5.0 / 3.0</td><td>Controls within-chunk and cross-chunk retention.</td></tr>
-            <tr><th scope="row">Adaptive sampling start</th><td>16 frames</td><td>Compression starts once the observed history exceeds this value.</td></tr>
-            <tr><th scope="row">Adaptive budget</th><td>max(min(N, 4+2&radic;N), 16)</td><td>Offset 4, square-root coefficient 2, minimum 16 retained frames.</td></tr>
-            <tr><th scope="row">Position encoding</th><td>enabled</td><td>Injects the 6D agent pose into the visual streams.</td></tr>
-            <tr><th scope="row">Frame-memory capacities</th><td>4 short + 12 long</td><td>Total capacity of 16 frame-memory slots.</td></tr>
-            <tr><th scope="row">Scene-bank capacity</th><td>300</td><td>Maximum in-memory cross-episode entries.</td></tr>
-            <tr><th scope="row">Scene retrieval threshold</th><td>0.6</td><td>Cosine-similarity threshold for a retrieval hit.</td></tr>
-            <tr><th scope="row">Warm-start coefficient</th><td>0.5</td><td>Blend ratio for a retrieved scene prior.</td></tr>
-            <tr><th scope="row">Write-back confidence threshold</th><td>0.4</td><td>Prevents unreliable in-episode summaries from entering the scene bank.</td></tr>
-          </tbody></table>
-        </div>
-        <p class="table-note">The released environment uses Python 3.9.23, PyTorch 2.6.0 with CUDA 12.4, Habitat-Sim/Lab/Baselines 0.2.4, Transformers 4.50.0, and FlashAttention 2.7.0.post2. Full deterministic mode is intentionally not enabled; the fixed seed supports comparable reruns.</p>
-      </div>
-    </section>
-
     <!-- BibTex citation -->
     <section class="section hero is-light" id="BibTeX">
       <div class="container is-max-desktop content">
