@@ -1192,7 +1192,7 @@ class MemoryVLNInference:
         memory_long_capacity: int = 12,
     ):
         try:
-            from qwen_vl.train.lora_utils import resolve_lora_base_and_adapter
+            from qwen_vl.utils.lora_utils import resolve_lora_base_and_adapter
 
             model_load_path, lora_dir = resolve_lora_base_and_adapter(pretrained)
         except Exception as _lora_resolve_exc:
