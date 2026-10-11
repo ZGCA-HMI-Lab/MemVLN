@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation">
+  <meta name="description" content="MemoryVLN is a unified memory-driven navigation system that builds compact, ego-aware memory and reuses it within and across navigation episodes for long-horizon vision-language navigation.">
+  <meta name="keywords" content="MemoryVLN, vision-language navigation, VLN-CE, R2R-CE, RxR-CE, ego-aware memory, memory bank, long-horizon navigation, embodied AI, robotics">
+  <meta name="author" content="Anonymous Submission">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="MemoryVLN Project Page">
+  <meta property="og:title" content="MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation">
+  <meta property="og:description" content="A unified memory-driven navigation system that constructs ego-aware memory and reuses it within and across episodes for long-horizon vision-language navigation.">
+  <meta property="og:image" content="static/images/overview.jpg">
+  <meta property="og:image:alt" content="MemoryVLN project preview">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="MemoryVLN">
+  <meta property="article:tag" content="Vision-Language Navigation">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation">
+  <meta name="twitter:description" content="A unified memory-driven navigation system that constructs ego-aware memory and reuses it within and across episodes for long-horizon vision-language navigation.">
+  <meta name="twitter:image" content="static/images/overview.jpg">
+  <meta name="twitter:image:alt" content="MemoryVLN project preview">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation">
+  <meta name="citation_author" content="Anonymous Submission">
+  <meta name="citation_publication_date" content="2027">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#667eea">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <title>MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation</title>
+
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- JavaScript -->
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation",
+  "description": "MemoryVLN is a unified memory-driven navigation system that builds compact, ego-aware memory and reuses it within and across navigation episodes for long-horizon vision-language navigation.",
+  "author": [
+    { "@type": "Person", "name": "Anonymous Submission" }
+  ],
+  "keywords": [
+    "MemoryVLN",
+    "Vision-Language Navigation",
+    "VLN-CE",
+    "Ego-Aware Memory",
+    "Cross-Context Memory Reuse"
+  ],
+  "abstract": "Large vision-language models have shown strong potential for embodied vision-language navigation, yet their performance degrades on long-horizon trajectories due to context-length limits, redundant historical observations, and unstable spatial alignment across time. We propose MemoryVLN, a unified memory-driven navigation system built around memory construction and management. During memory construction, Long Sequence Compression employs forgetting-curve-inspired temporal sampling to preserve dense recent evidence and sparse yet representative distant observations under a limited token budget. Ego-Aware Memory Representation integrates 2D semantic tokens, 3D geometric tokens, and 6D agent poses, allowing each memory to encode both what was observed and where it was observed. During memory management, a Hierarchical Memory Bank maintains in-episode and context-level memories through cross-context warm-start and confidence-controlled write-back. Memory Enhancement then retrieves the Top-K relevant memories according to the current navigation state and fuses them with the current visual tokens. Extensive experiments on R2R-CE and RxR-CE demonstrate consistent improvements over the state-of-the-art baselines by a substantial margin (i.e., 2% and 6.5% in success rate).",
+  "isAccessibleForFree": true
+}
+  </script>
+
+  <!-- MemoryVLN-specific lightweight style overrides. -->
+  <style>
+    :root {
+      --mem-accent: #667eea;
+      --mem-accent-strong: #4f63c6;
+      --mem-accent-soft: #eef2ff;
+      --mem-text: #2d3748;
+      --mem-muted: #4a5568;
+      --mem-line: #e2e8f0;
+      --mem-soft: #fafafa;
+      --mem-chip: #f8fafc;
+    }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--mem-text);
+    }
+
+    .publication-title {
+      font-family: 'Playfair Display', Georgia, serif !important;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.18;
+    }
+
+    .hero-main {
+      background: #ffffff;
+      border-bottom: 1px solid var(--mem-line);
+    }
+
+    .section-subtitle {
+      max-width: 880px;
+      margin: 0 auto;
+      color: var(--mem-muted);
+      line-height: 1.65;
+    }
+
+    .publication-affiliations {
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--mem-muted);
+      line-height: 1.55;
+    }
+
+    .publication-affiliations sup,
+    .publication-authors sup {
+      font-size: 0.68em;
+      line-height: 0;
+    }
+
+    .content p {
+      line-height: 1.75;
+    }
+
+    .mem-section-title {
+      color: var(--mem-accent-strong) !important;
+      font-weight: 700 !important;
+    }
+
+    .simple-card {
+      height: 100%;
+      border: 1px solid var(--mem-line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 1.1rem;
+    }
+
+    .simple-card h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+    }
+
+    .simple-card p,
+    .simple-card li {
+      color: var(--mem-muted);
+      line-height: 1.58;
+    }
+
+    .figure-caption {
+      max-width: 920px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--mem-muted);
+      line-height: 1.65;
+      text-align: left;
+    }
+
+    .figure-caption strong {
+      color: var(--mem-text);
+    }
+
+    .table-container {
+      border: 1px solid var(--mem-line);
+      border-radius: 12px;
+      overflow-x: auto;
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table thead th {
+      background: #f8fafc;
+      color: var(--mem-text);
+    }
+
+    .table td,
+    .table th {
+      vertical-align: middle;
+    }
+
+    .ours-row {
+      background: var(--mem-accent-soft);
+    }
+
+    .ours-row td {
+      color: var(--mem-text);
+    }
+
+    .ours-row td:first-child {
+      color: var(--mem-text);
+      font-weight: 700;
+    }
+
+    .ours-row strong {
+      color: var(--mem-text);
+    }
+
+    .table-note {
+      max-width: 860px;
+      margin: 0.35rem auto 0.9rem;
+      color: var(--mem-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .results-table {
+      min-width: 980px;
+    }
+
+    .results-table th,
+    .results-table td {
+      text-align: center;
+    }
+
+    .results-table th:first-child,
+    .results-table td:first-child {
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .metric-group {
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+
+    .metric-divider {
+      border-left: 2px solid var(--mem-line) !important;
+    }
+
+    .video-card {
+      background: #fff;
+      border: 1px solid var(--mem-line);
+      border-radius: 14px;
+      padding: 0.75rem;
+      height: 100%;
+    }
+
+    .mem-output-card {
+      height: auto;
+    }
+
+    .video-card video,
+    .teaser video,
+    .teaser img {
+      width: 100%;
+      border-radius: 10px;
+      background: #f1f5f9;
+    }
+
+    .video-card h3 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin-top: 0.7rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .video-card p {
+      color: var(--mem-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .video-group-title {
+      color: var(--mem-text);
+      font-weight: 700;
+      margin-top: 2.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .case-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      margin-bottom: 0.5rem;
+    }
+
+    .case-label.janus {
+      background: #fdecec;
+      color: #b23b3b;
+    }
+
+    .case-label.memory {
+      background: #e6f6ec;
+      color: #1f7a45;
+    }
+
+    .case-metric {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.8rem;
+      color: var(--mem-muted);
+      margin-top: 0.35rem;
+    }
+
+    .instruction-text {
+      color: var(--mem-text);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      font-style: italic;
+      margin-bottom: 0.55rem;
+    }
+
+    .bibtex-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .publication-title {
+        font-size: 2.25rem !important;
+      }
+      .bibtex-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    .paper-figure { margin-left: 0; margin-right: 0; }
+    .paper-figure img { display: block; width: 100%; height: auto; }
+    #results > .container { width: 100%; max-width: 1400px; }
+    .benchmark-pair { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem; align-items: start; }
+    .benchmark-pair > div { min-width: 0; }
+    .benchmark-pair .table-note { min-height: 3rem; }
+    .comparison-table { font-size: .9rem; font-variant-numeric: tabular-nums; }
+    .comparison-table tbody th { font-weight: 500; }
+    .comparison-table th, .comparison-table td { padding: .7rem .65rem; }
+    .comparison-table th:last-child, .comparison-table td:last-child { text-align: right; white-space: nowrap; }
+    .ours-row th { font-weight: 700 !important; }
+    .table-container:focus-visible { outline: 2px solid var(--mem-accent); outline-offset: 3px; }
+    @media screen and (max-width: 768px) {
+      .benchmark-pair { grid-template-columns: 1fr; gap: 2rem; }
+      .benchmark-pair .table-note { min-height: 0; }
+      .content.has-text-justified { text-align: left !important; }
+      .comparison-table { font-size: .8rem; }
+    }
+
+    /* A quieter editorial layout, with a consistent indigo accent. */
+    .section { padding-top: 4rem; padding-bottom: 4rem; }
+    .section .title.is-3 { color: #26324b !important; letter-spacing: -.025em; }
+    .hero-main { background: linear-gradient(180deg, #f7f8ff 0%, #fff 85%); }
+    .hero.is-light { background-color: #f7f8fc; }
+    .highlights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 2.25rem; }
+    .highlight-card { padding: 1.7rem; border: 1px solid #e4e7f1; border-radius: 18px; background: linear-gradient(145deg, #f8f9ff, #fff 65%); }
+    .highlight-number { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 12px; color: #5363b8; background: #eaeefe; font-size: .85rem; font-weight: 700; margin-bottom: 1.25rem; }
+    .highlight-card h3 { font-weight: 700; font-size: 1.12rem; margin-bottom: .75rem; color: #26324b; }
+    .highlight-card p { font-size: .95rem; line-height: 1.75; color: #526077; }
+    .simple-card { padding: 1.5rem; border-color: #e4e7f1; border-radius: 18px; box-shadow: 0 5px 20px #27375604; }
+    .paper-figure { padding: 1rem; background: #fff; border: 1px solid #e8eaf2; border-radius: 18px; }
+    .paper-figure .figure-caption { font-size: .92rem; padding: 0 .5rem .5rem; margin-top: .85rem; }
+    .benchmark-panel { padding: 1.5rem; border: 1px solid #e2e6f0; border-radius: 18px; background: #fff; box-shadow: 0 6px 24px #26324b05; }
+    .benchmark-panel > .title { font-size: 1.18rem; color: #344477; margin-bottom: .65rem; }
+    .benchmark-panel > .table-note { max-width: none; text-align: left; font-size: .87rem; }
+    .benchmark-panel > .table-note:last-child { margin-top: 1rem; margin-bottom: 0; }
+    .benchmark-pair { gap: 1.5rem; }
+    .table-container { margin-bottom: 0; border-color: #e6e9f2; border-radius: 10px; }
+    .table { margin-bottom: 0; }
+    .table thead th { background: #f4f6fb; font-weight: 600; }
+    .table td, .table tbody th { border-color: #edf0f5; }
+    .table tbody tr:last-child td, .table tbody tr:last-child th { border-bottom: 0; }
+    .ours-row { background: #edf0ff; }
+    .ours-row th, .ours-row strong { color: #4355a5; }
+    .video-card { border-color: #e4e7f1; box-shadow: 0 4px 20px #26324b04; }
+    .video-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    .video-compare .video-card { padding: 0.6rem; }
+    @media screen and (max-width: 900px) {
+      .highlights-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .highlight-card { padding: 1.4rem; }
+      .highlight-number { float: left; margin: 0 1rem .5rem 0; }
+      .highlight-card h3 { padding-top: .45rem; margin-bottom: 1rem; }
+      .highlight-card p { clear: both; }
+    }
+    @media screen and (max-width: 768px) {
+      .section { padding: 2.75rem 1.25rem; }
+      .benchmark-panel { padding: 1rem; }
+      .paper-figure { padding: .5rem; }
+      .video-compare { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <!-- Title / Authors / Links -->
+    <section class="hero hero-main">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation
+              </h1>
+
+              <div class="is-size-5 publication-authors mt-4">
+                <span class="author-block">Anonymous Submission</span>
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a href="https://github.com/ZGCA-HMI-Lab/MemVLN" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="#videos" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-video"></i>
+                      </span>
+                      <span>Videos</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-quote-right"></i>
+                      </span>
+                      <span>BibTeX</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Teaser -->
+    <section class="hero teaser">
+      <div class="container is-max-desktop"><div class="hero-body">
+        <a href="static/images/overview.jpg" target="_blank" rel="noopener" aria-label="Open the teaser figure at full resolution"><img src="static/images/overview.jpg" id="teaser" alt="MemoryVLN conceptual overview: memory construction and memory management for long-horizon navigation"></a>
+        <h2 class="subtitle has-text-centered mt-4">Turn a growing stream of first-person observations into <strong>compact, spatially grounded memory</strong> that can be retrieved within an episode and <strong>reused across contexts</strong>.</h2>
+      </div></div>
+    </section>
+
+    <!-- Abstract -->
+    <section class="section hero is-light" id="abstract">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered mem-section-title">Abstract</h2>
+        <div class="content has-text-justified"><p>Large vision-language models (LVLMs) have shown strong potential for embodied vision-language navigation (VLN), yet their performance degrades on long-horizon trajectories due to context-length limits, redundant historical observations, and unstable spatial alignment across time. These issues make it difficult to both compress long navigation histories and reliably reuse past spatial experience. To address these limitations, we propose <strong>MemoryVLN</strong>, a unified memory-driven navigation system built around memory construction and management. During memory construction, <em>Long Sequence Compression</em> employs forgetting-curve-inspired temporal sampling to preserve dense recent evidence and sparse yet representative distant observations under a limited token budget. <em>Ego-Aware Memory Representation</em> further integrates 2D semantic tokens, 3D geometric tokens, and 6D agent poses, allowing each memory to encode both what was observed and where it was observed. During memory management, <em>Hierarchical Memory Bank</em> maintains in-episode and context-level memories through cross-context warm-start and confidence-controlled write-back. <em>Memory Enhancement</em> then retrieves the Top-<em>K</em> relevant memories according to the current navigation state and fuses them with the current visual tokens. Together, these mechanisms transform raw navigation history into compact, spatially grounded, selectively retrievable, and reusable navigation experience. Extensive experiments on R2R-CE and RxR-CE demonstrate consistent improvements over the state-of-the-art baselines by a substantial margin (i.e., 2% and 6.5% in success rate).</p></div>
+      </div>
+    </section>
+
+    <!-- Highlights -->
+    <section class="section" id="highlights">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered mem-section-title">Highlights</h2>
+        <div class="highlights-grid">
+          <article class="highlight-card">
+            <span class="highlight-number">01</span>
+            <h3>Unified Memory-Driven Navigation</h3>
+            <p>We propose MemoryVLN, a unified memory-driven navigation system organized around memory construction and memory management, covering the complete memory process of compression, representation, storage, update, retrieval, and reuse.</p>
+          </article>
+          <article class="highlight-card">
+            <span class="highlight-number">02</span>
+            <h3>Four Complementary Modules</h3>
+            <p>Long Sequence Compression reduces long-history redundancy under a fixed token budget; Ego-Aware Memory Representation builds spatially grounded memories from 2D semantics, 3D geometry, and 6D poses; Hierarchical Memory Bank maintains in-episode and context-level experience; and Memory Enhancement retrieves and fuses relevant memories.</p>
+          </article>
+          <article class="highlight-card">
+            <span class="highlight-number">03</span>
+            <h3>Strong Long-Horizon Results</h3>
+            <p>On R2R-CE and RxR-CE, MemoryVLN improves the success rate over state-of-the-art, data-comparable baselines by approximately 2% and 6.5%, respectively, while using only a single RGB stream and standard VLN training trajectories.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Method -->
+    <section class="section hero is-light" id="method">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered mem-section-title">Method</h2>
+        <p class="section-subtitle has-text-centered">Memory construction turns raw observations into structured memory; memory management decides when that memory is stored, retrieved, and updated.</p>
+
+        <div class="columns mt-5">
+          <div class="column"><div class="simple-card">
+            <h3>(a) Long Sequence Compression</h3>
+            <p>An Ebbinghaus-inspired retention prior combines inter-chunk budget allocation with intra-chunk key-frame selection. Retention grows sublinearly as <em>B(N)=min{N, max[B<sub>min</sub>, &lfloor;a+b&radic;N&rfloor;]}</em>, preserving dense recent evidence and sparse representative distant landmarks under a bounded visual-token budget.</p>
+          </div></div>
+          <div class="column"><div class="simple-card">
+            <h3>(b) Ego-Aware Visuospatial Representation</h3>
+            <p>ViT-based 2D appearance tokens, frozen-VGGT 3D geometric tokens, and 6D agent poses are fused through a geometry residual. Each memory therefore encodes both <em>what</em> was observed and <em>where</em> it was observed, disambiguating visually similar locations.</p>
+          </div></div>
+        </div>
+        <div class="columns">
+          <div class="column"><div class="simple-card">
+            <h3>(c) Hierarchical Memory Bank</h3>
+            <p>A persistent Context-Level Bank warm-starts new episodes with the most similar prior and writes back only confidence-gated experience. An In-Episode Bank keeps recent frames in a FIFO short-term pool and consolidates distant history in a cosine-weighted long-term pool.</p>
+          </div></div>
+          <div class="column"><div class="simple-card">
+            <h3>(d) Memory Enhancement</h3>
+            <p>A frame-level query retrieves the Top-<em>K</em> memories from the joint short- and long-term pools. A softmax-weighted summary is interpolated with the current frame and injected as a residual into the current visual tokens before action prediction.</p>
+          </div></div>
+        </div>
+
+        <figure class="mt-5 paper-figure">
+          <a href="static/images/method.jpg" target="_blank" rel="noopener" aria-label="Open the method figure at full resolution"><img src="static/images/method.jpg" alt="MemoryVLN pipeline: long sequence compression, ego-aware visuospatial representation, hierarchical memory bank, and memory enhancement feeding a Qwen2.5-VL-7B backbone" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Detailed pipeline of MemoryVLN.</strong> (a) Long Sequence Compression performs inter-chunk budget allocation and intra-chunk key-frame selection. (b) Ego-Aware Visuospatial Representation integrates ViT-based 2D tokens, VGGT-based 3D tokens, and 6D agent poses. (c) Hierarchical Memory Bank maintains context-level and in-episode memories through warm start, write-back, and short-/long-term updates. (d) Memory Enhancement retrieves Top-<em>K</em> memories and residually fuses them with the current-frame tokens for action prediction.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Quantitative Results -->
+    <section class="section" id="results">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered mem-section-title">Quantitative Results</h2>
+        <p class="section-subtitle has-text-centered">Comparison with state-of-the-art methods on the R2R-CE and RxR-CE val-unseen splits, ablations, and paired significance tests.</p>
+
+        <div class="benchmark-panel mt-5">
+          <h3 class="title is-5">Main Comparison</h3>
+          <p class="table-note">R2R-CE and RxR-CE val-unseen. <sup>&#9733;</sup> denotes methods using a waypoint predictor; <sup>&#8224;</sup> denotes models trained only with VLN-CE expert trajectories without additional navigation data. Best results in bold.</p>
+          <div class="table-container" tabindex="0" role="region" aria-label="Main comparison results; scroll horizontally to view all metrics">
+            <table class="table is-fullwidth is-hoverable is-size-7 results-table"><thead>
+              <tr>
+                <th rowspan="2" scope="col">Method</th>
+                <th colspan="4" scope="colgroup" class="metric-group metric-divider">Observation</th>
+                <th colspan="4" scope="colgroup" class="metric-group metric-divider">R2R Val-Unseen</th>
+                <th colspan="4" scope="colgroup" class="metric-group metric-divider">RxR Val-Unseen</th>
+              </tr>
+              <tr>
+                <th scope="col" class="metric-divider">Pano.</th>
+                <th scope="col">Odo.</th>
+                <th scope="col">Depth</th>
+                <th scope="col">S.RGB</th>
+                <th scope="col" class="metric-divider">NE&darr;</th>
+                <th scope="col">OS&uarr;</th>
+                <th scope="col">SR&uarr;</th>
+                <th scope="col">SPL&uarr;</th>
+                <th scope="col" class="metric-divider">NE&darr;</th>
+                <th scope="col">SR&uarr;</th>
+                <th scope="col">SPL&uarr;</th>
+                <th scope="col">nDTW&uarr;</th>
+              </tr>
+            </thead><tbody>
+              <tr><th scope="row">HPN+DN<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">6.31</td><td>40.0</td><td>36.0</td><td>34.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">CMA<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">6.20</td><td>52.0</td><td>41.0</td><td>36.0</td><td class="metric-divider">8.76</td><td>26.5</td><td>22.1</td><td>47.0</td></tr>
+              <tr><th scope="row">Sim2Sim<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">6.07</td><td>52.0</td><td>43.0</td><td>36.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">VLN-BERT<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">5.74</td><td>53.0</td><td>44.0</td><td>39.0</td><td class="metric-divider">8.98</td><td>27.0</td><td>22.6</td><td>46.7</td></tr>
+              <tr><th scope="row">Ego<sup>2</sup>-Map<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">5.54</td><td>56.0</td><td>47.0</td><td>41.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">DreamWalker<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">5.53</td><td>59.0</td><td>49.0</td><td>44.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">GridMM<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">5.11</td><td>61.0</td><td>49.0</td><td>41.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">Reborn<sup>&#9733;</sup></th><td class="metric-divider">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>--</td><td class="metric-divider">5.40</td><td>57.0</td><td>50.0</td><td>46.0</td><td class="metric-divider">5.98</td><td>48.6</td><td>42.0</td><td>63.3</td></tr>
+              <tr><th scope="row">InstructNav</th><td class="metric-divider">&#10003;</td><td>--</td><td>--</td><td>--</td><td class="metric-divider">6.89</td><td>--</td><td>31.0</td><td>24.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">COSMO</th><td class="metric-divider">&#10003;</td><td>--</td><td>--</td><td>--</td><td class="metric-divider">--</td><td>56.0</td><td>47.0</td><td>40.0</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">AO-Planner</th><td class="metric-divider">&#10003;</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.55</td><td>59.0</td><td>47.0</td><td>33.0</td><td class="metric-divider">7.06</td><td>43.3</td><td>30.5</td><td>50.1</td></tr>
+              <tr><th scope="row">LAW</th><td class="metric-divider">--</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">6.83</td><td>44.0</td><td>35.0</td><td>31.0</td><td class="metric-divider">10.90</td><td>8.0</td><td>8.0</td><td>38.0</td></tr>
+              <tr><th scope="row">MapNav</th><td class="metric-divider">--</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">4.93</td><td>53.0</td><td>39.7</td><td>37.2</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">g3D-LF</th><td class="metric-divider">--</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">5.70</td><td>59.5</td><td>47.2</td><td>34.6</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">Seq2Seq</th><td class="metric-divider">--</td><td>--</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">7.77</td><td>37.0</td><td>25.0</td><td>22.0</td><td class="metric-divider">12.10</td><td>13.9</td><td>11.9</td><td>30.8</td></tr>
+              <tr><th scope="row">NaVid-4D</th><td class="metric-divider">--</td><td>--</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">5.99</td><td>55.7</td><td>43.8</td><td>37.1</td><td class="metric-divider">--</td><td>--</td><td>--</td><td>--</td></tr>
+              <tr><th scope="row">NavMorph</th><td class="metric-divider">--</td><td>--</td><td>&#10003;</td><td>&#10003;</td><td class="metric-divider">5.75</td><td>56.9</td><td>47.9</td><td>33.2</td><td class="metric-divider">8.85</td><td>30.8</td><td>22.8</td><td>44.2</td></tr>
+              <tr><th scope="row">NaVid</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.72</td><td>49.2</td><td>41.9</td><td>36.5</td><td class="metric-divider">5.72</td><td>45.7</td><td>38.2</td><td>--</td></tr>
+              <tr><th scope="row">Sim2Real</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.95</td><td>55.8</td><td>44.9</td><td>30.4</td><td class="metric-divider">8.79</td><td>36.7</td><td>25.5</td><td>18.1</td></tr>
+              <tr><th scope="row">Uni-NaVid</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.58</td><td>53.3</td><td>47.0</td><td>42.7</td><td class="metric-divider">6.24</td><td>48.7</td><td>40.9</td><td>--</td></tr>
+              <tr><th scope="row">StreamVLN-RGB-only</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.10</td><td>64.0</td><td>55.7</td><td>50.9</td><td class="metric-divider">6.16</td><td>51.8</td><td>45.0</td><td>62.1</td></tr>
+              <tr><th scope="row">NaVILA</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.22</td><td>62.5</td><td>54.0</td><td>49.0</td><td class="metric-divider">6.77</td><td>49.3</td><td>44.0</td><td>58.8</td></tr>
+              <tr><th scope="row">InternVLA-N1</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">4.89</td><td>60.6</td><td>55.4</td><td>52.1</td><td class="metric-divider">6.41</td><td>49.5</td><td>41.8</td><td>62.6</td></tr>
+              <tr><th scope="row">JanusVLN<sup>&#8224;</sup></th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider">5.17</td><td>58.0</td><td>52.8</td><td>49.2</td><td class="metric-divider">6.46</td><td>51.4</td><td>44.3</td><td>59.1</td></tr>
+              <tr class="ours-row"><th scope="row">MemoryVLN (Ours)</th><td class="metric-divider">--</td><td>--</td><td>--</td><td>&#10003;</td><td class="metric-divider"><strong>3.52</strong></td><td><strong>59.98</strong></td><td><strong>54.76</strong></td><td><strong>50.26</strong></td><td class="metric-divider"><strong>3.33</strong></td><td><strong>57.84</strong></td><td><strong>50.42</strong></td><td><strong>63.52</strong></td></tr>
+            </tbody></table>
+          </div>
+          <p class="table-note">MemoryVLN uses a single RGB stream and standard VLN training trajectories, without DAgger rollouts or additional navigation data. Compared with the strongest data-comparable baseline, SR improves by about 2% on R2R-CE and 6.5% on RxR-CE.</p>
+        </div>
+
+        <div class="benchmark-pair mt-5">
+          <div class="benchmark-panel">
+            <h3 class="title is-5">Component Ablation</h3>
+            <p class="table-note">R2R-CE and RxR-CE val-unseen. Removing Long Sequence Compression leads to out-of-memory (OOM) because historical visual tokens grow with trajectory length.</p>
+            <div class="table-container" tabindex="0" role="region" aria-label="Ablation results">
+              <table class="table is-fullwidth is-hoverable comparison-table"><thead>
+                <tr><th scope="col">Dataset</th><th scope="col">Variant</th><th scope="col">NE&darr;</th><th scope="col">SR&uarr;</th><th scope="col">SPL&uarr;</th></tr>
+              </thead><tbody>
+                <tr><th scope="row">R2R</th><td>w/o Long-Seq. Comp.</td><td colspan="3"><em>OOM</em></td></tr>
+                <tr><th scope="row">R2R</th><td>w/o Pos-Encoding</td><td>3.66</td><td>52.75</td><td>49.25</td></tr>
+                <tr><th scope="row">R2R</th><td>w/o In-Episode</td><td>3.57</td><td>53.34</td><td>49.06</td></tr>
+                <tr><th scope="row">R2R</th><td>w/o Context</td><td>3.55</td><td>54.16</td><td>49.65</td></tr>
+                <tr class="ours-row"><th scope="row">R2R</th><td>Full MemoryVLN</td><td><strong>3.52</strong></td><td><strong>54.76</strong></td><td><strong>50.26</strong></td></tr>
+                <tr><th scope="row">RxR</th><td>w/o Long-Seq. Comp.</td><td colspan="3"><em>OOM</em></td></tr>
+                <tr><th scope="row">RxR</th><td>w/o Pos-Encoding</td><td>3.35</td><td>57.24</td><td>48.74</td></tr>
+                <tr><th scope="row">RxR</th><td>w/o In-Episode</td><td>3.30</td><td>56.69</td><td>48.13</td></tr>
+                <tr><th scope="row">RxR</th><td>w/o Context</td><td><strong>3.29</strong></td><td>57.37</td><td>49.09</td></tr>
+                <tr class="ours-row"><th scope="row">RxR</th><td>Full MemoryVLN</td><td>3.33</td><td><strong>57.84</strong></td><td><strong>50.42</strong></td></tr>
+              </tbody></table>
+            </div>
+            <p class="table-note">The four modules provide complementary benefits in scalability, spatial alignment, in-episode history preservation, and cross-episode reuse.</p>
+          </div>
+
+          <div class="benchmark-panel">
+            <h3 class="title is-5">Paired Significance</h3>
+            <p class="table-note">Episode-level paired tests between JanusVLN and MemoryVLN on the same evaluation episodes. Differences are MemoryVLN minus JanusVLN in percentage points.</p>
+            <div class="table-container" tabindex="0" role="region" aria-label="Paired significance results">
+              <table class="table is-fullwidth is-hoverable comparison-table"><thead>
+                <tr><th scope="col">Dataset</th><th scope="col">Metric</th><th scope="col">N</th><th scope="col">JanusVLN</th><th scope="col">MemoryVLN</th><th scope="col">&Delta; (pp)</th><th scope="col">p</th></tr>
+              </thead><tbody>
+                <tr><th scope="row">R2R</th><td>SR</td><td>1,839</td><td>52.8</td><td>54.8</td><td>+2.0</td><td>0.158</td></tr>
+                <tr><th scope="row">R2R</th><td>SPL</td><td>1,839</td><td>49.0</td><td>50.3</td><td>+1.2</td><td>0.327</td></tr>
+                <tr class="ours-row"><th scope="row">RxR</th><td>SR</td><td>3,669</td><td>51.0</td><td>57.2</td><td>+6.2</td><td>2.7&times;10<sup>-12</sup></td></tr>
+                <tr class="ours-row"><th scope="row">RxR</th><td>SPL</td><td>3,570</td><td>43.5</td><td>48.7</td><td>+5.2</td><td>1.3&times;10<sup>-12</sup></td></tr>
+              </tbody></table>
+            </div>
+            <p class="table-note">On R2R the differences are positive but not statistically significant; on RxR both SR and SPL differences are significant. Confidence intervals are paired bootstrap 95% intervals.</p>
+          </div>
+        </div>
+
+        <figure class="mt-5 paper-figure">
+          <a href="static/images/selected_checkpoint_lines.jpg" target="_blank" rel="noopener" aria-label="Open the training-data comparison figure at full resolution"><img src="static/images/selected_checkpoint_lines.jpg" alt="Selected R2R val-unseen comparisons for SR and SPL as functions of training data" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Selected R2R val-unseen comparisons for SR and SPL as functions of training data.</strong> The dashed line marks 46.4% training data, the last data-matched comparison point; the reported-final point to its right is marked with an asterisk because it is not training-data matched. Annotations report MemoryVLN minus JanusVLN in percentage points.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Qualitative Results -->
+    <section class="section hero is-light" id="videos">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered mem-section-title">Qualitative Results</h2>
+        <p class="section-subtitle has-text-centered">Under identical instructions, JanusVLN loses instruction-relevant context and fails, whereas MemoryVLN preserves historical and spatial context and reaches the target.</p>
+
+        <h3 class="title is-5 has-text-centered video-group-title">Habitat Comparison: JanusVLN vs. MemoryVLN</h3>
+
+        <!-- Case R2R-1 -->
+        <div class="video-card mem-output-card mb-5">
+          <span class="case-label janus"><i class="fas fa-times"></i> JanusVLN</span>
+          <span class="case-label memory"><i class="fas fa-check"></i> MemoryVLN (Ours)</span>
+          <p class="instruction-text">&ldquo;Walk down the stairs and take a right to go down the next flight of stairs. Stop at the bottom of the stairs.&rdquo;</p>
+          <div class="video-compare">
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/r2r_janus_468.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>JanusVLN</strong> &middot; Fail &middot; 110 steps &middot; NE 4.28 m</p>
+            </div>
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/r2r_memory_468.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>MemoryVLN</strong> &middot; Success &middot; 45 steps &middot; NE 0.03 m</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case R2R-2 -->
+        <div class="video-card mem-output-card mb-5">
+          <span class="case-label janus"><i class="fas fa-times"></i> JanusVLN</span>
+          <span class="case-label memory"><i class="fas fa-check"></i> MemoryVLN (Ours)</span>
+          <p class="instruction-text">&ldquo;Walk all the way forward and enter another door. Keep walking forward on the red carpet, and stop where the tiles are on the ground, and the end of the carpet.&rdquo;</p>
+          <div class="video-compare">
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/r2r_janus_1493.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>JanusVLN</strong> &middot; Fail &middot; 109 steps &middot; NE 32.91 m</p>
+            </div>
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/r2r_memory_1493.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>MemoryVLN</strong> &middot; Success &middot; 41 steps &middot; NE 1.13 m</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case RxR-1 -->
+        <div class="video-card mem-output-card mb-5">
+          <span class="case-label janus"><i class="fas fa-times"></i> JanusVLN</span>
+          <span class="case-label memory"><i class="fas fa-check"></i> MemoryVLN (Ours)</span>
+          <p class="instruction-text">&ldquo;Begin facing 2 grey chairs. Turn around and head into the open closet door way to the right of the bed. Head down the length of the closet towards the washroom and you&rsquo;re done.&rdquo;</p>
+          <div class="video-compare">
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_janus_9735.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>JanusVLN</strong> &middot; Fail &middot; 55 steps &middot; NE 8.76 m</p>
+            </div>
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_memory_9735.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>MemoryVLN</strong> &middot; Success &middot; 36 steps &middot; NE 0.08 m</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case RxR-2 -->
+        <div class="video-card mem-output-card mb-5">
+          <span class="case-label janus"><i class="fas fa-times"></i> JanusVLN</span>
+          <span class="case-label memory"><i class="fas fa-check"></i> MemoryVLN (Ours)</span>
+          <p class="instruction-text">&ldquo;You are now facing to the wall, from there take an about turn, start walking straight through the narrow corridor. Search for the brown color in front of you and stand near it.&rdquo;</p>
+          <div class="video-compare">
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_janus_5816.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>JanusVLN</strong> &middot; Fail &middot; 40 steps &middot; NE 3.03 m</p>
+            </div>
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_memory_5816.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>MemoryVLN</strong> &middot; Success &middot; 53 steps &middot; NE 0.08 m</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case RxR-3 -->
+        <div class="video-card mem-output-card mb-5">
+          <span class="case-label janus"><i class="fas fa-times"></i> JanusVLN</span>
+          <span class="case-label memory"><i class="fas fa-check"></i> MemoryVLN (Ours)</span>
+          <p class="instruction-text">&ldquo;Right now you are facing toward a stone wall. Make a slight left and get down the stair case in front you, you can see a carpet, walk through the carpet until where you can see a sofa in front of you.&rdquo;</p>
+          <div class="video-compare">
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_janus_5473.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>JanusVLN</strong> &middot; Fail &middot; 52 steps &middot; NE 15.95 m</p>
+            </div>
+            <div class="video-card">
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/rxr_memory_5473.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>MemoryVLN</strong> &middot; Success &middot; 31 steps &middot; NE 0.10 m</p>
+            </div>
+          </div>
+        </div>
+
+        <figure class="paper-figure">
+          <a href="static/images/qualitative_habitat.jpg" target="_blank" rel="noopener" aria-label="Open the qualitative Habitat figure at full resolution"><img src="static/images/qualitative_habitat.jpg" alt="Qualitative comparison between JanusVLN and MemoryVLN on four Habitat episodes under identical instructions" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Qualitative comparison between JanusVLN and MemoryVLN on four Habitat episodes under identical instructions.</strong> Each example combines representative egocentric observations with top-down trajectories, where the yellow star marks the goal, the green curve marks the shortest path, and the blue curve marks the executed agent trajectory. JanusVLN fails in these examples, whereas MemoryVLN reaches the target region and stops successfully.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Real-World -->
+    <section class="section" id="realworld">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered mem-section-title">Real-World Navigation</h2>
+        <p class="section-subtitle has-text-centered">Beyond simulation, MemoryVLN executes natural-language instructions on a physical robot in an indoor office environment.</p>
+
+        <figure class="mt-5 paper-figure">
+          <a href="static/images/real_world.jpg" target="_blank" rel="noopener" aria-label="Open the real-world navigation figure at full resolution"><img src="static/images/real_world.jpg" alt="Five real-world natural-language navigation instructions executed by a Unitree GO2 quadruped in an indoor office environment" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Qualitative real-world navigation results for five natural-language instructions using a Unitree GO2 quadruped in an indoor office environment.</strong> Navigation-policy inference is performed on a single NVIDIA GeForce RTX 4090 GPU. The egocentric sequences show the robot following corridor and doorway transitions, passing the specified landmarks, and stopping at the requested destination. The targets include a printer, a coffee machine, a designated room, a water dispenser, and a conference-room podium.</figcaption>
+        </figure>
+
+        <figure class="mt-5 paper-figure">
+          <a href="static/images/qualitative_merge.jpg" target="_blank" rel="noopener" aria-label="Open the qualitative evaluation figure at full resolution"><img src="static/images/qualitative_merge.jpg" alt="Qualitative evaluation of MemoryVLN in Habitat simulation and a real indoor environment" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Qualitative evaluation in Habitat simulation and a real indoor environment.</strong> Top: JanusVLN gradually deviates from the instructed route and fails, whereas MemoryVLN preserves historical and spatial context and reaches the target. Bottom: MemoryVLN successfully executes real-world instructions with different routes and target locations.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Failure Cases -->
+    <section class="section hero is-light" id="failure">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered mem-section-title">Failure Case Analysis</h2>
+        <p class="section-subtitle has-text-centered">Four representative MemoryVLN failures, exposing limitations at the semantic-topological, terminal-grounding, memory-quality, and long-horizon progress levels.</p>
+
+        <div class="benchmark-panel mt-5">
+          <p class="table-note" style="text-align:left; max-width:none;">All four trajectories have zero Success, SPL, and Oracle Success. NE is the final navigation error; Oracle NE is the minimum goal distance reached anywhere along the predicted trajectory.</p>
+          <div class="table-container" tabindex="0" role="region" aria-label="Failure case table">
+            <table class="table is-fullwidth is-hoverable comparison-table"><thead>
+              <tr><th scope="col">Dataset</th><th scope="col">Scene / Episode</th><th scope="col">Steps</th><th scope="col">NE</th><th scope="col">Oracle NE</th><th scope="col">Coll.</th><th scope="col">Failure type</th></tr>
+            </thead><tbody>
+              <tr><th scope="row">R2R</th><td>QUCTc6BB5sX / 577</td><td>78</td><td>28.61</td><td>14.13</td><td>0</td><td>Semantic branch confusion</td></tr>
+              <tr><th scope="row">R2R</th><td>x8F5xyUWy9e / 231</td><td>60</td><td>10.76</td><td>6.08</td><td>3</td><td>Final-doorway grounding</td></tr>
+              <tr><th scope="row">R2R</th><td>EU6Fwq7SyZv / 1206</td><td>56</td><td>10.28</td><td>5.82</td><td>0</td><td>Failed-context reuse</td></tr>
+              <tr><th scope="row">RxR</th><td>2azQ1b91cZZ / 5691</td><td>44</td><td>16.40</td><td>12.49</td><td>3</td><td>Progress loss / early stop</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <figure class="mt-5 paper-figure">
+          <a href="static/images/badcase.jpg" target="_blank" rel="noopener" aria-label="Open the failure case figure at full resolution"><img src="static/images/badcase.jpg" alt="Four representative MemoryVLN failure trajectories with egocentric observations and top-down maps" loading="lazy"></a>
+          <figcaption class="figure-caption"><strong>Representative MemoryVLN failure trajectories.</strong> From top to bottom, the rows illustrate room-level branch confusion, ordinal-sensitive final-doorway grounding, a landmark-turn error not corrected by context memory, and long-instruction progress loss. Each row pairs egocentric observations with a top-down map showing the goal, shortest path, and executed agent trajectory.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Implementation -->
+    <section class="section" id="implementation">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered mem-section-title">Implementation</h2>
+        <p class="section-subtitle has-text-centered">MemoryVLN uses Qwen2.5-VL as the action-prediction backbone and keeps the VGGT geometry branch frozen.</p>
+        <div class="table-container mt-5" tabindex="0" role="region" aria-label="Implementation configuration">
+          <table class="table is-fullwidth is-hoverable comparison-table"><thead>
+            <tr><th scope="col">Component</th><th scope="col">Value</th><th scope="col">Role</th></tr>
+          </thead><tbody>
+            <tr><th scope="row">Action backbone</th><td>Qwen2.5-VL</td><td>Actor prediction is conditioned on language and memory-enhanced tokens.</td></tr>
+            <tr><th scope="row">Geometry backbone</th><td>frozen VGGT</td><td>Produces geometric tokens; no VGGT parameters are updated.</td></tr>
+            <tr><th scope="row">Training / evaluation seed</th><td>42</td><td>Seeds Python, NumPy, PyTorch CPU, and all CUDA devices.</td></tr>
+            <tr><th scope="row">Compute platform</th><td>64 &times; A100 80GB</td><td>Global batch size 64 (64 GPUs &times; per-device 1 &times; grad-accum 1).</td></tr>
+            <tr><th scope="row">Maximum rollout length</th><td>400</td><td>Stops an episode after at most 400 navigation actions.</td></tr>
+            <tr><th scope="row">Frame-sampling chunk size</th><td>8</td><td>Chunk size for two-level Ebbinghaus-style sampling.</td></tr>
+            <tr><th scope="row">Inner / outer sampling scale</th><td>5.0 / 3.0</td><td>Controls within-chunk and cross-chunk retention.</td></tr>
+            <tr><th scope="row">Adaptive sampling start</th><td>16 frames</td><td>Compression starts once the observed history exceeds this value.</td></tr>
+            <tr><th scope="row">Adaptive budget</th><td>max(min(N, 4+2&radic;N), 16)</td><td>Offset 4, square-root coefficient 2, minimum 16 retained frames.</td></tr>
+            <tr><th scope="row">Position encoding</th><td>enabled</td><td>Injects the 6D agent pose into the visual streams.</td></tr>
+            <tr><th scope="row">Frame-memory capacities</th><td>4 short + 12 long</td><td>Total capacity of 16 frame-memory slots.</td></tr>
+            <tr><th scope="row">Scene-bank capacity</th><td>300</td><td>Maximum in-memory cross-episode entries.</td></tr>
+            <tr><th scope="row">Scene retrieval threshold</th><td>0.6</td><td>Cosine-similarity threshold for a retrieval hit.</td></tr>
+            <tr><th scope="row">Warm-start coefficient</th><td>0.5</td><td>Blend ratio for a retrieved scene prior.</td></tr>
+            <tr><th scope="row">Write-back confidence threshold</th><td>0.4</td><td>Prevents unreliable in-episode summaries from entering the scene bank.</td></tr>
+          </tbody></table>
+        </div>
+        <p class="table-note">The released environment uses Python 3.9.23, PyTorch 2.6.0 with CUDA 12.4, Habitat-Sim/Lab/Baselines 0.2.4, Transformers 4.50.0, and FlashAttention 2.7.0.post2. Full deterministic mode is intentionally not enabled; the fixed seed supports comparable reruns.</p>
+      </div>
+    </section>
+
+    <!-- BibTex citation -->
+    <section class="section hero is-light" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <div class="bibtex-header">
+          <h2 class="title mem-section-title">BibTeX</h2>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre id="bibtex-code"><code>@article{memoryvln2027,
+  title={MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation},
+  author={Anonymous Submission},
+  journal={arXiv preprint},
+  year={2027}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>
+              which was adopted from the
+              <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>
+              project page. You are free to borrow the source code of this website, we just ask that you link back to this page in the footer.
+              <br>
+              This website is licensed under a
+              <a rel="license noopener" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Ignore everything in this working tree by default, then re-include the site.
+/*
+
+# Project webpage (deployed to GitHub Pages from the site/ directory).
+!/site/
+!/site/**
+
+# Keep the ignore file itself.
+!/.gitignore
+
+# Never track large artifacts even if a rule above is relaxed.
+**/__pycache__/
+*.log
+*.aux
