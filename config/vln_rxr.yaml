@@ -1,0 +1,65 @@
+# @package _global_
+# RxR VLN-CE 评估：与 vln_r2r 相同管线，仅 dataset 路径不同。
+# episodes 为 R2RVLN-v1（VLNDatasetV1）；data_path 须与磁盘上一致（不行则改下一行）。
+# 常见：train → datasets/rxr/train/train_guide.json.gz；val → {split}/{split}_guide.json.gz
+
+defaults:
+  - /habitat: habitat_config_base
+  - /habitat/task: vln_r2r
+  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: rgbd_agent
+  - /habitat/dataset/vln: mp3d_r2r
+  - /habitat/task/lab_sensors:
+    - gps_sensor
+    - compass_sensor
+  - _self_
+
+habitat:
+  environment:
+    max_episode_steps: 500
+    iterator_options:
+      max_scene_repeat_steps: 50000
+      shuffle: False
+  simulator:
+    agents:
+      main_agent:
+        sim_sensors:
+          rgb_sensor:
+            width: 640
+            height: 480
+            hfov: 79
+          depth_sensor:
+            width: 640
+            height: 480
+            hfov: 79
+            min_depth: 0.0
+            max_depth: 10.0
+    forward_step_size: 0.25
+    turn_angle: 15
+    habitat_sim_v0:
+      gpu_device_id: 0
+  task:
+    measurements:
+      distance_to_goal:
+        type: DistanceToGoal
+        distance_to: POINT
+      success:
+        type: Success
+        success_distance: 3.0
+      spl:
+        type: SPL
+      oracle_success:
+        type: OracleSuccess
+      oracle_navigation_error:
+        type: OracleNavigationError
+      # RxR 官方 VLN-CE 轨迹一致性指标。evaluation.py 会根据当前
+      # dataset.data_path 与 --eval_split 自动定位同目录的 guide_gt。
+      ndtw:
+        type: NDTW
+      sdtw:
+        type: SDTW
+
+  dataset:
+    type: R2RVLN-v1
+    split: val_unseen
+    scenes_dir: data/scene_datasets/
+    data_path: data/datasets/rxr/{split}/{split}_guide.json.gz

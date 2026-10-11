@@ -1,5 +1,5 @@
-# Ignore everything in this working tree by default, then re-include the site
-# and the Pages deployment workflow.
+# Ignore everything in this working tree by default, then re-include the
+# website (site/), the code package, and the Pages workflow.
 /*
 
 # Project webpage (deployed to GitHub Pages from the site/ directory).
@@ -14,7 +14,26 @@
 # Keep the ignore file itself.
 !/.gitignore
 
+# ---------------------------------------------------------------------------
+# MemoryVLN code package (mirrored from the standard-data implementation).
+# ---------------------------------------------------------------------------
+!/config/
+!/config/**
+!/create_data/
+!/create_data/**
+!/scripts/
+!/scripts/**
+!/src/
+!/src/**
+!/setup.py
+!/requirements.txt
+!/__init__.py
+!/LICENSE_APACHE-2.0.txt
+!/LICENSE_VGGT.txt
+!/THIRD_PARTY_NOTICES.md
+
 # Never track large artifacts even if a rule above is relaxed.
 **/__pycache__/
+*.py[cod]
 *.log
 *.aux
