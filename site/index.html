@@ -745,6 +745,40 @@
         <h2 class="title is-3 has-text-centered mem-section-title">Real-World Navigation</h2>
         <p class="section-subtitle has-text-centered">Beyond simulation, MemoryVLN executes natural-language instructions on a physical robot in an indoor office environment.</p>
 
+        <h3 class="title is-5 has-text-centered video-group-title">Real-Robot Deployment (Unitree GO2)</h3>
+        <p class="section-subtitle has-text-centered">Four natural-language instructions executed end-to-end on a quadruped robot, with navigation-policy inference on a single NVIDIA GeForce RTX 4090 GPU. Landmarks and routes are shown at 4&times; speed.</p>
+
+        <div class="columns is-multiline mt-4">
+          <div class="column is-half-desktop is-full-mobile">
+            <div class="video-card mem-output-card">
+              <p class="instruction-text">&ldquo;Go out of the gym and move right, enter the conference hall, and stop in front of the podium.&rdquo;</p>
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/real_task1.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>Task 1</strong> &middot; Conference-hall podium</p>
+            </div>
+          </div>
+          <div class="column is-half-desktop is-full-mobile">
+            <div class="video-card mem-output-card">
+              <p class="instruction-text">&ldquo;Go out and turn right, walk pass the printer and turn right, and stop in front of the coffee machine.&rdquo;</p>
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/real_task2.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>Task 2</strong> &middot; Coffee machine</p>
+            </div>
+          </div>
+          <div class="column is-half-desktop is-full-mobile">
+            <div class="video-card mem-output-card">
+              <p class="instruction-text">&ldquo;Go out and turn right, walk pass the table and turn right, enter the second room and stop in it.&rdquo;</p>
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/real_task3.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>Task 3</strong> &middot; Designated room</p>
+            </div>
+          </div>
+          <div class="column is-half-desktop is-full-mobile">
+            <div class="video-card mem-output-card">
+              <p class="instruction-text">&ldquo;Move forward and turn right, walk pass the elevator and stop in front of the water dispenser.&rdquo;</p>
+              <video controls muted loop playsinline preload="metadata"><source src="static/videos/real_task4.mp4" type="video/mp4"></video>
+              <p class="case-metric"><strong>Task 4</strong> &middot; Water dispenser</p>
+            </div>
+          </div>
+        </div>
+
         <figure class="mt-5 paper-figure">
           <a href="static/images/real_world.jpg" target="_blank" rel="noopener" aria-label="Open the real-world navigation figure at full resolution"><img src="static/images/real_world.jpg" alt="Five real-world natural-language navigation instructions executed by a Unitree GO2 quadruped in an indoor office environment" loading="lazy"></a>
           <figcaption class="figure-caption"><strong>Qualitative real-world navigation results for five natural-language instructions using a Unitree GO2 quadruped in an indoor office environment.</strong> Navigation-policy inference is performed on a single NVIDIA GeForce RTX 4090 GPU. The egocentric sequences show the robot following corridor and doorway transitions, passing the specified landmarks, and stopping at the requested destination. The targets include a printer, a coffee machine, a designated room, a water dispenser, and a conference-room podium.</figcaption>
