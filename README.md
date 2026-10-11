@@ -86,7 +86,7 @@ The project page under [`site/`](site/) is a static site published to GitHub Pag
 ~~~bibtex
 @article{memoryvln2027,
   title={MemoryVLN: From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation},
-  author={Anonymous Submission},
+  author={Xueyao Wei and Yifei Wang and Delun Li and Shaoan Wang and Junzhi Yu and Wenjie Song and Xingyu Chen},
   journal={arXiv preprint},
   year={2027}
 }
