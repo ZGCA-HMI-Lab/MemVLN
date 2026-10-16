@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="site/static/images/logo.png" alt="MemoryVLN logo" width="96" />
-
 # MemoryVLN
 
 **From Ego-Aware Memory Representation to Cross-Context Memory Reuse in Vision-Language Navigation**
